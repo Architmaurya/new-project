@@ -1,0 +1,22 @@
+{
+  "name": "gallery-timeline-api",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "cloudinary": "^1.41.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^5.1.0",
+    "mongoose": "^8.16.1",
+    "multer": "^2.0.1",
+    "multer-storage-cloudinary": "^4.0.0",
+    "streamifier": "^0.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
