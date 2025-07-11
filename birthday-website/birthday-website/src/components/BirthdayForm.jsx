@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { endpoints } from '../operations/apis';
-
+import TimelineForm from '../pages/TimelineForm'
 // ✅ Define API constants
 
 
@@ -227,6 +227,7 @@ export default function Start() {
 
       {showThirdForm && birthdayId && (
         <div className="w-full flex flex-col items-center gap-6">
+        <TimelineForm/>
           <button
             onClick={handleShow}
             className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition"

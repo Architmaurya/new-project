@@ -91,3 +91,27 @@ exports.createMemories = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error.', error: error.message });
   }
 };
+
+
+
+exports.getMemories = async (req, res) => {
+  try {
+    const { birthdayId } = req.params;
+
+    if (!birthdayId) {
+      return res.status(400).json({ success: false, message: 'birthdayId is required in params.' });
+    }
+
+    const memories = await Memory.find({ birthdayId });
+
+    res.status(200).json({
+      success: true,
+      message: `Found ${memories.length} memories for birthdayId: ${birthdayId}`,
+      memories,
+    });
+  } catch (error) {
+    console.error('Error fetching memories:', error);
+    res.status(500).json({ success: false, message: 'Server error.', error: error.message });
+  }
+};
+

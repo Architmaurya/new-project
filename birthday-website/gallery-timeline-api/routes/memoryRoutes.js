@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { createMemories } = require("../controllers/memoryController");
+const { getMemories,createMemories } = require("../controllers/memoryController");
 // const upload = require('../middlewares/multer');
 
 const multer = require("multer");
@@ -29,5 +29,9 @@ router.post(
   upload.array("images"),
   createMemories
 );
+
+
+// GET: Fetch memories by birthdayId
+router.get('/:birthdayId', getMemories);
 
 module.exports = router;

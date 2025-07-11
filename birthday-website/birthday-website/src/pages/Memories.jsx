@@ -1,4 +1,3 @@
-// ✅ FRONTEND: Memories.jsx
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -9,10 +8,10 @@ const Memories = () => {
   const [activeFilter, setActiveFilter] = useState('All Photos');
   const [memories, setMemories] = useState([]);
   const [touchedIndex, setTouchedIndex] = useState(null);
-  const cardRefs = useRef([]); // ✅ Refs to track each card
+  const cardRefs = useRef([]);
 
   useEffect(() => {
-    const id = localStorage.getItem('birthdayId');
+    const id = birthdayId || localStorage.getItem('birthdayId');
     if (!id) {
       console.warn('⚠️ No birthdayId in URL or localStorage');
       return;
@@ -21,12 +20,17 @@ const Memories = () => {
     localStorage.setItem('birthdayId', id);
 
     const url = endpoints.MEMORY_GET(id);
-    axios.get(url)
-      .then((res) => setMemories(res.data.data || []))
-      .catch((err) => console.error('❌ Failed to fetch memories:', err.response?.data || err.message));
+    axios
+      .get(url)
+      .then((res) => {
+        setMemories(res.data.memories || []);
+      })
+      .catch((err) => {
+        console.error('❌ Failed to fetch memories:', err.response?.data || err.message);
+      });
   }, [birthdayId]);
 
-  // ✅ Add outside click listener
+  // Close overlay when clicking outside a card
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -34,7 +38,7 @@ const Memories = () => {
         cardRefs.current[touchedIndex] &&
         !cardRefs.current[touchedIndex].contains(event.target)
       ) {
-        setTouchedIndex(null); // ✅ Hide overlay if clicked outside
+        setTouchedIndex(null);
       }
     };
 
@@ -45,9 +49,10 @@ const Memories = () => {
   const uniqueCategories = [...new Set(memories.map((m) => m.category))];
   const filters = ['All Photos', ...uniqueCategories];
 
-  const filteredMemories = activeFilter === 'All Photos'
-    ? memories
-    : memories.filter((m) => m.category === activeFilter);
+  const filteredMemories =
+    activeFilter === 'All Photos'
+      ? memories
+      : memories.filter((m) => m.category === activeFilter);
 
   return (
     <div className="h-full bg-pink-50 py-10 px-4">
@@ -74,14 +79,12 @@ const Memories = () => {
           {filteredMemories.map((memory, index) => (
             <div
               key={index}
-              ref={(el) => (cardRefs.current[index] = el)} // ✅ Assign ref to card
+              ref={(el) => (cardRefs.current[index] = el)}
               className="group relative h-full bg-white shadow rounded-lg w-72 flex flex-col"
               onClick={() => setTouchedIndex(index === touchedIndex ? null : index)}
             >
-              {/* ✅ Gradient Glow */}
               <div className="absolute inset-0 z-0 rounded-lg opacity-0 group-hover:opacity-100 transition duration-500 before:content-[''] before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-r before:from-pink-500 before:via-yellow-400 before:to-purple-500 before:blur-xl before:opacity-60" />
 
-              {/* ✅ Image with overlay title */}
               <div className="relative h-80 w-full overflow-hidden rounded z-10">
                 <img
                   src={memory.img}
