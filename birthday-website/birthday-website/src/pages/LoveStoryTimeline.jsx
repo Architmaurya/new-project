@@ -1,16 +1,42 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { timelineEvents } from './timelineData';
+import axios from 'axios';
+import { endpoints } from '../operations/apis'; // ✅ CORRECT IMPORT
+import { useParams } from 'react-router-dom';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const LoveStoryTimeline = () => {
   const timelineRef = useRef([]);
+  const [timelineEvents, setTimelineEvents] = useState([]);
+  const { birthdayId } = useParams();
+
+  useEffect(() => {
+    const fetchTimeline = async () => {
+      try {
+        const res = await axios.get(endpoints.GET_TIMELINE_BY_ID(birthdayId)); // ✅ CORRECT USAGE
+        console.log("➡️ Hitting URL:", endpoints.GET_TIMELINE_BY_ID(birthdayId));
+
+        if (res.data.success) {
+          setTimelineEvents(res.data.timelines);
+        } else {
+          alert('No timeline found.');
+        }
+      } catch (err) {
+        console.error('❌ Error fetching timeline:', err);
+        alert('Failed to fetch timeline');
+      }
+    };
+
+    if (birthdayId) {
+      fetchTimeline();
+    }
+  }, [birthdayId]);
 
   useEffect(() => {
     timelineRef.current.forEach((el) => {
-      if (!el) return; // skip if ref is undefined
+      if (!el) return;
       gsap.fromTo(
         el,
         { opacity: 0, y: 80 },
@@ -27,7 +53,7 @@ const LoveStoryTimeline = () => {
         }
       );
     });
-  }, []);
+  }, [timelineEvents]);
 
   return (
     <div className="bg-pink-50 min-h-screen py-12 px-4 md:px-12 font-sans">
@@ -35,7 +61,7 @@ const LoveStoryTimeline = () => {
         Our Love Story Timeline
       </h2>
       <p className="text-center text-gray-500 mb-10">
-        do not go on things written that are random , we are working on it""":)
+        do not go on things written that are random, we are working on it :)
       </p>
 
       <div className="relative max-w-6xl mx-auto">
@@ -65,11 +91,13 @@ const LoveStoryTimeline = () => {
                   </div>
                   <h3 className="text-xl font-semibold text-gray-800">{event.title}</h3>
                   <p className="text-gray-600 mt-2">{event.description}</p>
-                  <img
-                    src={event.image}
-                    alt={event.title}
-                    className="w-full mt-4 rounded-lg object-cover shadow-md"
-                  />
+                  {event.image && (
+                    <img
+                      src={event.image}
+                      alt={event.title}
+                      className="w-full mt-4 rounded-lg object-cover shadow-md"
+                    />
+                  )}
                 </div>
               </div>
 

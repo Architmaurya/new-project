@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { endpoints } from '../operations/apis';
+import { endpoints } from '../operations/apis'; // Make sure BIRTHDAY_TIME is correct
 
 export default function TimelineForm() {
   const [birthdayId, setBirthdayId] = useState('');
@@ -50,30 +50,37 @@ export default function TimelineForm() {
     }
 
     try {
-      for (let event of timelineEvents) {
-        const formData = new FormData();
-        formData.append('birthdayId', birthdayId);
-        formData.append('date', event.date);
-        formData.append('location', event.location);
-        formData.append('title', event.title);
-        formData.append('description', event.description);
-        formData.append('icon', event.icon);
+      const formData = new FormData();
+
+      // Add timeline data excluding the files
+      const timelinesData = timelineEvents.map(({ file, ...rest }) => ({
+        ...rest,
+        birthdayId,
+      }));
+      formData.append('timelinesData', JSON.stringify(timelinesData));
+
+      // Add files to formData
+      timelineEvents.forEach((event) => {
         if (event.file) {
-          formData.append('image', event.file);
+          formData.append('image', event.file); // key name must match multer.array('image')
         }
+      });
 
-        await axios.post(endpoints.BIRTHDAY_TIME, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
-      }
+      // Call the API
+      const res = await axios.post(endpoints.BIRTHDAY_TIME, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
-      alert('🎉 All timeline events saved!');
+      console.log('✅ Response:', res.data);
+      alert(res.data.message || 'Timeline events saved successfully!');
+
+      // Reset form
       setTimelineEvents([
         { date: '', location: '', title: '', description: '', file: null, icon: '💖' },
       ]);
     } catch (err) {
-      console.error('❌ Timeline Upload Error:', err.response?.data || err.message);
-      alert('Failed to upload one or more timeline events.');
+      console.error('❌ Error:', err.response?.data || err.message);
+      alert('Upload failed: ' + (err.response?.data?.message || err.message));
     }
   };
 

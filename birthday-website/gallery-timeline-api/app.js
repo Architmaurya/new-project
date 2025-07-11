@@ -18,10 +18,12 @@ mongoose.connect(process.env.MONGODB_URI)
 // Routes
 const birthdayRoutes = require('./routes/birthdayRoutes');
 const memoryRoutes = require('./routes/memoryRoutes');
+const timelineRoutes=require("./routes/timeline.routes")
 
 
 app.use('/api/birthday', birthdayRoutes);
 app.use('/api/memory', memoryRoutes);
+app.use('/api/timelime',timelineRoutes)
 
 
 // Start Server
