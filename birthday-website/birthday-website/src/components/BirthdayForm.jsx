@@ -224,12 +224,13 @@ export default function Start() {
             </button>
           </div>
         </form>
+        
       )}
-
+ 
       {showThirdForm && birthdayId && (
         <div className="w-full flex flex-col items-center gap-6">
         <TimelineForm/>
-        <SecretCodeForm/>
+       <SecretCodeForm/>
           <button
             onClick={handleShow}
             className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition"

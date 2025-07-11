@@ -30,7 +30,7 @@ const SecretCodeForm = ({ onSubmit }) => {
   return (
     <div className="bg-pink-50 p-6 rounded-2xl shadow-xl max-w-xl mx-auto mt-10 relative overflow-hidden">
       {/* Floating Hearts */}
-      <div className="absolute inset-0 pointer-events-none animate-pulse z-0">
+      {/* <div className="absolute inset-0 pointer-events-none animate-pulse z-0">
         {[...Array(25)].map((_, i) => (
           <span
             key={i}
@@ -44,7 +44,7 @@ const SecretCodeForm = ({ onSubmit }) => {
             💖
           </span>
         ))}
-      </div>
+      </div> */}
 
       <form
         onSubmit={handleSubmit}
