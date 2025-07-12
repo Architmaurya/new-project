@@ -19,7 +19,7 @@ const NavBar = () => {
     { path: '/', label: 'Information' },
     { path: '/welcome', label: 'Welcome' },
     { path: '/memories', label: 'Memories' },
-    { path: '/loveStory', label: 'Archit' },
+    { path: '/loveStory', label: 'Timeline' },
     { label: 'Special', isModal: true },
   ];
 
