@@ -33,7 +33,7 @@ const HeartFloat = () => {
       });
     };
 
-    const interval = setInterval(createHeart, 100);
+    const interval = setInterval(createHeart, 70);
 
     return () => clearInterval(interval);
   }, []);

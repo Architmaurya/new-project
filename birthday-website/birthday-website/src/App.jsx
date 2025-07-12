@@ -6,16 +6,18 @@ import SecretCodeModal from './pages/SecretCodeModal';
 import LoveStoryTimeline from './pages/LoveStoryTimeline';
 import NavBar from './components/Navbar';
 import HeartFloat from './components/HeartFloat';
+import CursorHearts from './components/CursorHearts'; // ✅ import
 import Infromation from './components/BirthdayForm';
 
 function App() {
   return (
     <Router>
+      <CursorHearts /> {/* ✅ Add here */}
       <HeartFloat />
       <NavBar />
       <Routes>
-       <Route path="/" element={<Infromation />} />
-          <Route path="/welcome/:birthdayId" element={<Welcome />} />
+        <Route path="/" element={<Infromation />} />
+        <Route path="/welcome/:birthdayId" element={<Welcome />} />
         <Route path="/memories/:birthdayId" element={<Memories />} />
         <Route path="/special/:birthdayId" element={<SecretCodeModal />} />
         <Route path="/loveStory/:birthdayId" element={<LoveStoryTimeline />} />
