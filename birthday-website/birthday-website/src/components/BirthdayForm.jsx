@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { endpoints } from '../operations/apis';
-import TimelineForm from '../pages/TimelineForm'
+import TimelineForm from '../pages/TimelineForm';
 import SecretCodeForm from '../pages/SecretCodeForm';
-// ✅ Define API constants
-
 
 export default function Start() {
   const navigate = useNavigate();
@@ -19,10 +16,14 @@ export default function Start() {
   const [birthdayId, setBirthdayId] = useState(localStorage.getItem('birthdayId') || null);
 
   const [memories, setMemories] = useState([{ title: '', category: '', file: null }]);
-
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState('');
   const [apiSuccess, setApiSuccess] = useState('');
+
+  // NEW: Step 3 internal controls
+  const [showTimelineForm, setShowTimelineForm] = useState(true);
+  const [showSecretForm, setShowSecretForm] = useState(false);
+  const [showFinalButton, setShowFinalButton] = useState(false);
 
   const handleFirstSubmit = async (e) => {
     e.preventDefault();
@@ -34,12 +35,7 @@ export default function Start() {
       const birthdayResponse = await fetch(endpoints.BIRTHDAY_CREATE, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          nickname,
-          happyText,
-          birthdayText,
-          message,
-        }),
+        body: JSON.stringify({ nickname, happyText, birthdayText, message }),
       });
 
       if (!birthdayResponse.ok) {
@@ -98,12 +94,11 @@ export default function Start() {
     formData.append('memoriesData', JSON.stringify(memoriesDataArray));
 
     try {
-      console.log(formData)
       const response = await fetch(endpoints.MEMORY_CREATE, {
         method: 'POST',
         body: formData,
       });
-      console.log(response);
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to save memories');
@@ -159,7 +154,8 @@ export default function Start() {
       {apiError && <p className="text-red-600 font-bold">{apiError}</p>}
       {apiSuccess && <p className="text-green-600 font-bold">{apiSuccess}</p>}
 
-      {!showSecondForm && (
+      {/* Step 1: Birthday Form */}
+      {!showSecondForm && !showThirdForm && (
         <form onSubmit={handleFirstSubmit} className="bg-white shadow p-8 rounded w-full max-w-md space-y-4">
           <h1 className="text-2xl font-bold text-center text-pink-500">Let's Begin 💖</h1>
           <input className="w-full border p-2 rounded" placeholder="Nickname" value={nickname} onChange={(e) => setNickname(e.target.value)} required />
@@ -172,7 +168,8 @@ export default function Start() {
         </form>
       )}
 
-      {showSecondForm && (
+      {/* Step 2: Memory Form */}
+      {showSecondForm && !showThirdForm && (
         <form onSubmit={handleMemorySubmit} className="bg-white shadow p-8 rounded w-full max-w-2xl space-y-6">
           <h2 className="text-xl font-bold text-center text-purple-500">Add Memories 📸</h2>
           {memories.map((memory, index) => (
@@ -224,19 +221,37 @@ export default function Start() {
             </button>
           </div>
         </form>
-        
       )}
- 
+
+      {/* Step 3: Timeline → Secret Code → Final Button */}
       {showThirdForm && birthdayId && (
         <div className="w-full flex flex-col items-center gap-6">
-        <TimelineForm/>
-       <SecretCodeForm/>
-          <button
-            onClick={handleShow}
-            className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition"
-          >
-            🎉 Show Your Birthday Page
-          </button>
+          {showTimelineForm && (
+            <TimelineForm
+              onSubmit={() => {
+                setShowTimelineForm(false);
+                setShowSecretForm(true);
+              }}
+            />
+          )}
+
+          {showSecretForm && (
+            <SecretCodeForm
+              onSubmitComplete={() => {
+                setShowSecretForm(false);
+                setShowFinalButton(true);
+              }}
+            />
+          )}
+
+          {showFinalButton && (
+            <button
+              onClick={handleShow}
+              className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition"
+            >
+              🎉 Show Your Birthday Page
+            </button>
+          )}
         </div>
       )}
     </div>

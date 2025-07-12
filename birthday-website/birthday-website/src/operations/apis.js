@@ -9,4 +9,7 @@ export const endpoints = {
  BIRTHDAY_TIME:`${BASE_URL}/timelime/timelinecreate`,
 
  GET_TIMELINE_BY_ID: (birthdayId) => `${BASE_URL}/timelime/${birthdayId}`,
+
+ SECRET_CODE:`${BASE_URL}/secret`
+
 };

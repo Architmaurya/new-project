@@ -9,15 +9,20 @@ exports.createSecretCode = async (req, res) => {
       return res.status(400).json({ error: 'All fields are required.' });
     }
 
-    // Optional: Verify secret code before saving
-    if (code.trim().toLowerCase() !== 'loveyou') {
-      return res.status(401).json({ error: 'Invalid secret code.' });
-    }
+    // ✅ Removed hardcoded code check to allow user-defined secret code
 
-    const newSecret = new SecretCode({ code, message, birthdayId });
+    const newSecret = new SecretCode({
+      code: code.trim().toLowerCase(),  // Save in lowercase for easier matching
+      message,
+      birthdayId
+    });
+
     const saved = await newSecret.save();
 
-    res.status(201).json({ message: 'Secret saved successfully!', data: saved });
+    res.status(201).json({
+      message: 'Secret saved successfully!',
+      data: saved
+    });
   } catch (error) {
     console.error('Error saving secret code:', error);
     res.status(500).json({ error: 'Server error while saving secret message.' });
