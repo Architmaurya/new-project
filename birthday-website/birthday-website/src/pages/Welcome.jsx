@@ -83,7 +83,7 @@ const Welcome = () => {
       </motion.p>
 
       {/* Buttons */}
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.6, delay: 0.6 }}
@@ -95,7 +95,7 @@ const Welcome = () => {
         <button className="bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:scale-105 transition-transform">
           Through It All
         </button>
-      </motion.div>
+      </motion.div> */}
 
       {/* Scroll Prompt */}
       <motion.div
