@@ -5,10 +5,12 @@ const cors = require('cors');
 
 const app = express();
 
+// ✅ Allow all origins
+app.use(cors()); // ⬅️ This line enables CORS for everyone
+
 // Middleware
-app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // for parsing multipart/form-data
+app.use(express.urlencoded({ extended: true }));
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI)
@@ -18,15 +20,13 @@ mongoose.connect(process.env.MONGODB_URI)
 // Routes
 const birthdayRoutes = require('./routes/birthdayRoutes');
 const memoryRoutes = require('./routes/memoryRoutes');
-const timelineRoutes=require("./routes/timeline.routes")
-const secretCode =require("./routes/secretCode.routes")
-
+const timelineRoutes = require('./routes/timeline.routes');
+const secretCodeRoutes = require('./routes/secretCode.routes');
 
 app.use('/api/birthday', birthdayRoutes);
 app.use('/api/memory', memoryRoutes);
-app.use('/api/timelime',timelineRoutes)
-app.use('/api',secretCode)
-
+app.use('/api/timelime', timelineRoutes);
+app.use('/api', secretCodeRoutes);
 
 // Start Server
 const PORT = process.env.PORT || 5000;
