@@ -61,9 +61,9 @@ const Welcome = () => {
         transition={{ duration: 1 }}
         className="text-5xl font-bold text-pink-600 mb-2"
       >
-        {birthdayData.happyText || 'Happy'}{' '}
+        {birthdayData.happyText }{' '}
         <span className="text-purple-600 italic">
-          {birthdayData.birthdayText || 'Birthday'}
+          {birthdayData.birthdayText }
         </span>
       </motion.h1>
 
@@ -76,7 +76,7 @@ const Welcome = () => {
       >
         My Dearest{' '}
         <span className="text-pink-500 font-extrabold italic">
-          {birthdayData.nickname || 'Sona'}
+          {birthdayData.nickname }
         </span>
       </motion.h2>
 
@@ -87,8 +87,8 @@ const Welcome = () => {
         transition={{ duration: 1.4, delay: 0.4 }}
         className="text-lg max-w-3xl text-gray-700 leading-relaxed mb-6"
       >
-        {birthdayData.message ||
-          "You're amazing, and I'm grateful for every moment with you 💖"}
+        {birthdayData.message
+          }
       </motion.p>
 
       {/* 🎁 Restricted Buttons (Visible only if user came from Start.jsx) */}
