@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { endpoints } from '../operations/apis';
 import TimelineForm from '../pages/TimelineForm';
 import SecretCodeForm from '../pages/SecretCodeForm';
+import GenerateLinkButton from './GenerateLinkButton';
 
 export default function Start() {
   const navigate = useNavigate();
@@ -20,7 +21,6 @@ export default function Start() {
   const [apiError, setApiError] = useState('');
   const [apiSuccess, setApiSuccess] = useState('');
 
-  // NEW: Step 3 internal controls
   const [showTimelineForm, setShowTimelineForm] = useState(true);
   const [showSecretForm, setShowSecretForm] = useState(false);
   const [showFinalButton, setShowFinalButton] = useState(false);
@@ -120,7 +120,10 @@ export default function Start() {
 
   const handleShow = () => {
     const id = birthdayId || localStorage.getItem('birthdayId');
-    if (id) navigate(`/welcome/${id}`);
+    if (id) {
+      localStorage.setItem('fromStartPage', 'true'); // ✅ set flag
+      navigate(`/welcome/${id}`);
+    }
   };
 
   const handleMemoryChange = (index, field, value) => {
@@ -245,12 +248,15 @@ export default function Start() {
           )}
 
           {showFinalButton && (
-            <button
-              onClick={handleShow}
-              className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition"
-            >
-              🎉 Show Your Birthday Page
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4 items-center">
+              <button
+                onClick={handleShow}
+                className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition"
+              >
+                🎉 Show Your Birthday Page
+              </button>
+              <GenerateLinkButton birthdayId={birthdayId} />
+            </div>
           )}
         </div>
       )}

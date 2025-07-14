@@ -13,6 +13,8 @@ const Welcome = () => {
     message: '',
   });
 
+  const [showRestrictedInfo, setShowRestrictedInfo] = useState(false); // 👈 for conditional display
+
   useEffect(() => {
     const id = birthdayId || localStorage.getItem('birthdayId');
     if (!id) {
@@ -25,7 +27,8 @@ const Welcome = () => {
     const url = endpoints.BIRTHDAY_GETWISHE(id);
     console.log('📡 Fetching birthday data from:', url);
 
-    axios.get(url)
+    axios
+      .get(url)
       .then((res) => {
         const data = res.data?.data;
         if (!data) return;
@@ -40,11 +43,17 @@ const Welcome = () => {
       .catch((err) => {
         console.error('❌ API Error:', err.response?.data || err.message);
       });
+
+    // ✅ Only show restricted content if user came from Start page
+    const fromStart = localStorage.getItem('fromStartPage');
+    if (fromStart === 'true') {
+      setShowRestrictedInfo(true);
+      localStorage.removeItem('fromStartPage'); // ✅ remove after showing once
+    }
   }, [birthdayId]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-pink-100 px-4 text-center overflow-hidden">
-      
       {/* Title */}
       <motion.h1
         initial={{ opacity: 0, y: 100 }}
@@ -82,20 +91,22 @@ const Welcome = () => {
           "You're amazing, and I'm grateful for every moment with you 💖"}
       </motion.p>
 
-      {/* Buttons */}
-      {/* <motion.div
-        initial={{ opacity: 0, y: 100 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.6, delay: 0.6 }}
-        className="flex gap-6 mb-6"
-      >
-        <button className="bg-gradient-to-r from-pink-500 to-pink-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:scale-105 transition-transform">
-          Moments That Stayed
-        </button>
-        <button className="bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:scale-105 transition-transform">
-          Through It All
-        </button>
-      </motion.div> */}
+      {/* 🎁 Restricted Buttons (Visible only if user came from Start.jsx) */}
+      {showRestrictedInfo && (
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.6, delay: 0.6 }}
+          className="flex gap-6 mb-6"
+        >
+          <button className="bg-gradient-to-r from-pink-500 to-pink-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:scale-105 transition-transform">
+            Moments That Stayed
+          </button>
+          <button className="bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:scale-105 transition-transform">
+            Through It All
+          </button>
+        </motion.div>
+      )}
 
       {/* Scroll Prompt */}
       <motion.div

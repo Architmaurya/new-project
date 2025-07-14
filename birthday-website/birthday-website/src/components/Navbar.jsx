@@ -1,4 +1,3 @@
-// components/NavBar.jsx
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import SecretCodeModal from '../pages/SecretCodeModal';
@@ -8,15 +7,19 @@ const NavBar = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [birthdayId, setBirthdayId] = useState(null);
+  const [fromStartPage, setFromStartPage] = useState(false);
 
   useEffect(() => {
     const storedId = localStorage.getItem('birthdayId');
+    const fromStart = localStorage.getItem('fromStartPage') === 'true';
+
     console.log('🎈 Loaded from localStorage:', storedId);
     if (storedId) setBirthdayId(storedId);
-  }, [pathname]); // also re-check on route change
+    setFromStartPage(fromStart);
+  }, [pathname]); // re-check on route change
 
   const navItems = [
-    { path: '/', label: 'Information' },
+    { path: '/', label: 'Information', showIfStartOnly: true },
     { path: '/welcome', label: 'Welcome' },
     { path: '/memories', label: 'Memories' },
     { path: '/loveStory', label: 'Timeline' },
@@ -39,7 +42,9 @@ const NavBar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('birthdayId');
+    localStorage.removeItem('fromStartPage');
     setBirthdayId(null);
+    setFromStartPage(false);
     navigate('/');
   };
 
@@ -52,8 +57,13 @@ const NavBar = () => {
           </div>
 
           <div className="space-x-2 sm:space-x-4 flex items-center">
-            {navItems.map(({ path, label, isModal }) => {
+            {navItems.map(({ path, label, isModal, showIfStartOnly }) => {
               const isBirthdayRoute = path !== '/';
+
+              // ⛔ Hide "Information" if not from Start Page
+              if (showIfStartOnly && !fromStartPage) return null;
+
+              // ⛔ Hide routes that need birthdayId
               if (isBirthdayRoute && !birthdayId) return null;
 
               return isModal ? (
