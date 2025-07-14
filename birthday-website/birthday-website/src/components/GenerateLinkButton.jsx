@@ -1,5 +1,5 @@
 import React from 'react';
-// import { toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 const GenerateLinkButton = ({ birthdayId }) => {
   const handleCopy = () => {

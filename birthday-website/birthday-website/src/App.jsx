@@ -8,10 +8,12 @@ import NavBar from './components/Navbar';
 import HeartFloat from './components/HeartFloat';
 import CursorHearts from './components/CursorHearts'; // ✅ import
 import Infromation from './components/BirthdayForm';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
     <Router>
+    <Toaster position="top-right" reverseOrder={false} />
       <CursorHearts /> {/* ✅ Add here */}
       <HeartFloat />
       <NavBar />
