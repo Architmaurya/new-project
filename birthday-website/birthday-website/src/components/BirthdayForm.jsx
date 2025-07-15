@@ -20,6 +20,8 @@ export default function Start() {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState('');
   const [apiSuccess, setApiSuccess] = useState('');
+    const [linkGenerated, setLinkGenerated] = useState(false); // ✅ Add this here
+
 
   const [showTimelineForm, setShowTimelineForm] = useState(true);
   const [showSecretForm, setShowSecretForm] = useState(false);
@@ -249,13 +251,23 @@ export default function Start() {
 
           {showFinalButton && (
             <div className="flex flex-col sm:flex-row gap-4 items-center">
-              <button
+           <button
+  onClick={handleShow}
+  className={`px-6 py-2 rounded transition ${
+    linkGenerated ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+  }`}
+  disabled={!linkGenerated}
+>
+  🎉 Show Your Birthday Page
+</button>
+   <button
                 onClick={handleShow}
                 className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition"
               >
                 🎉 Show Your Birthday Page
               </button>
-              <GenerateLinkButton birthdayId={birthdayId} />
+              <GenerateLinkButton birthdayId={birthdayId} onGenerate={() => setLinkGenerated(true)} />
+
             </div>
           )}
         </div>
