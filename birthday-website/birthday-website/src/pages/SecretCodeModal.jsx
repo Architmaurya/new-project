@@ -1,26 +1,36 @@
-import React, { useState } from 'react';
-import { X, Lock } from 'lucide-react';
-import axios from 'axios';
-import { endpoints } from '../operations/apis';
+import React, { useState, useEffect } from "react";
+import { X, Lock } from "lucide-react";
+import axios from "axios";
+import { endpoints } from "../operations/apis";
 
 const SecretCodeModal = ({ isOpen, onClose, onUnlock }) => {
-  const [code, setCode] = useState('');
-  const [responseMessage, setResponseMessage] = useState('');
+  const [code, setCode] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [flipped, setFlipped] = useState(false);
+
+  // ✅ Reset state every time modal is closed
+  useEffect(() => {
+    if (!isOpen) {
+      setCode("");
+      setResponseMessage("");
+      setFlipped(false);
+      setLoading(false);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
   const handleUnlock = async () => {
-    const birthdayId = localStorage.getItem('birthdayId');
+    const birthdayId = localStorage.getItem("birthdayId");
 
     if (!code.trim()) {
-      alert('Please enter the secret code!');
+      alert("Please enter the secret code!");
       return;
     }
 
     if (!birthdayId) {
-      alert('Birthday ID not found. Please refresh the page.');
+      alert("Birthday ID not found. Please refresh the page.");
       return;
     }
 
@@ -31,22 +41,19 @@ const SecretCodeModal = ({ isOpen, onClose, onUnlock }) => {
         birthdayId,
       });
 
-      setResponseMessage(res.data.message || 'Unlocked!');
-      setFlipped(true); // ✅ Flip the card
+      setResponseMessage(res.data.message || "Unlocked!");
+      setFlipped(true);
 
-      // ⏳ Wait before running the unlock logic
-  const minutes = 1;
-    setTimeout(() => {
-      setFlipped(false);
-      setCode('');
-      setResponseMessage('');
-    }, minutes * 60 * 1000);// match the flip animation duration
-
-
+      // ⏳ Auto flip back after 1 minute
+      setTimeout(() => {
+        setFlipped(false);
+        setCode("");
+        setResponseMessage("");
+      }, 1 * 60 * 1000);
     } catch (err) {
       console.error(err);
-      setResponseMessage('❌ Incorrect code! Try again 💔');
-      setFlipped(true); // Optional: flip even on error
+      setResponseMessage("❌ Incorrect code! Try again 💔");
+      setFlipped(true);
     } finally {
       setLoading(false);
     }
@@ -58,7 +65,7 @@ const SecretCodeModal = ({ isOpen, onClose, onUnlock }) => {
         <div className="relative w-full min-h-[380px] perspective">
           <div
             className={`relative w-full h-full transition-transform duration-700 transform-style preserve-3d ${
-              flipped ? 'rotate-y-180' : ''
+              flipped ? "rotate-y-180" : ""
             }`}
           >
             {/* Front Side */}
@@ -95,7 +102,7 @@ const SecretCodeModal = ({ isOpen, onClose, onUnlock }) => {
                   className="w-full mt-6 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-semibold py-3 rounded-xl transition duration-300"
                   disabled={loading}
                 >
-                  {loading ? 'Unlocking...' : 'Unlock My Heart 💕'}
+                  {loading ? "Unlocking..." : "Unlock My Heart 💕"}
                 </button>
               </div>
             </div>
@@ -113,7 +120,9 @@ const SecretCodeModal = ({ isOpen, onClose, onUnlock }) => {
 
               <div className="p-6 text-center flex-1 flex flex-col justify-center">
                 <div className="text-4xl mb-4 text-green-500">💌</div>
-                <p className="text-lg font-semibold text-gray-700">{responseMessage}</p>
+                <p className="text-lg font-semibold text-gray-700">
+                  {responseMessage}
+                </p>
               </div>
             </div>
           </div>

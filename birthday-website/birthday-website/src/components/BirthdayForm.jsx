@@ -260,12 +260,12 @@ export default function Start() {
 >
   🎉 Show Your Birthday Page
 </button>
-   <button
+   {/* <button
                 onClick={handleShow}
                 className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition"
               >
                 🎉 Show Your Birthday Page
-              </button>
+              </button> */}
               <GenerateLinkButton birthdayId={birthdayId} onGenerate={() => setLinkGenerated(true)} />
 
             </div>
